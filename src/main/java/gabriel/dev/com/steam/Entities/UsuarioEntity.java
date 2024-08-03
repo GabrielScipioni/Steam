@@ -28,6 +28,7 @@ public class UsuarioEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "pais")
     private Pais pais;
 
     @Column(name = "last_login")
@@ -35,7 +36,8 @@ public class UsuarioEntity {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
+    @Column(name = "nivel")
     private Integer nivel;
+    @Column(name = "coins")
     private float coins;
 }

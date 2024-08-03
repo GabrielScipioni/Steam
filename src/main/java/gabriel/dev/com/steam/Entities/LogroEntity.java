@@ -20,8 +20,8 @@ public class LogroEntity {
     private Long Id;
 
     @ManyToOne
-    @JoinColumn(name = "Juego_Id")
-    private JuegoEntity Juego;
-
-    private String Logro;
+    @JoinColumn(name = "juego_Id")
+    private JuegoEntity juego;
+    @Column(name = "logro")
+    private String logro;
 }

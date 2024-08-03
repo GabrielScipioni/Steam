@@ -22,7 +22,8 @@ public class JuegoServiceImpl implements JuegoService {
     private ModelMapper modelMapper;
 
     public List<Juego> busacarJuegosDeAutor(String nombreCreador){
-        //todo se debera devolver los juegos asociados a un creador pasado por parametro, usar creadorService.GetCreadoresByName(nombreCreador)
+        //se debera devolver los juegos asociados a un creador pasado por parametro, usar juegoRepository.findJuegosByCreadorNombre(nombreCreador)
+
         return null;
     }
     public void crearJuego(Genero genero, float precio, String creador, String nombre, String release){

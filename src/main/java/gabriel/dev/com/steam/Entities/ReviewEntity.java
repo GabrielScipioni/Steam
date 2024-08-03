@@ -20,12 +20,12 @@ public class ReviewEntity {
     private Long Id;
 
     @ManyToOne
-    @JoinColumn(name = "Juego_Id")
-    private JuegoEntity Juego;
+    @JoinColumn(name = "juego_Id")
+    private JuegoEntity juego;
 
     @ManyToOne
-    @JoinColumn(name = "Usuario_Id")
-    private UsuarioEntity Usuario;
-
-    private String Comentario;
+    @JoinColumn(name = "usuario_Id")
+    private UsuarioEntity usuario;
+    @Column(name = "comentario")
+    private String comentario;
 }

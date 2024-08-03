@@ -19,9 +19,9 @@ public class LogroXUsuarioEntity {
     private Long Id;
 
     @ManyToOne
-    @JoinColumn(name = "Logro_Id")
-    private LogroEntity Logro;
+    @JoinColumn(name = "logro_Id")
+    private LogroEntity logro;
     @ManyToOne
-    @JoinColumn(name = "Usuario_Id")
-    private UsuarioEntity Usuario;
+    @JoinColumn(name = "usuario_Id")
+    private UsuarioEntity usuario;
 }

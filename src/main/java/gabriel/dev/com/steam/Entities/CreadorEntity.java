@@ -18,5 +18,6 @@ public class CreadorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String Nombre;
+    @Column(name = "nombre")
+    private String nombre;
 }

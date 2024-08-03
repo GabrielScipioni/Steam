@@ -20,17 +20,17 @@ public class BibliotecaEntity {
 
     // IdJuego
     @ManyToOne
-    @JoinColumn(name = "Juego_Id")
-    private JuegoEntity Juego;
+    @JoinColumn(name = "juego_Id")
+    private JuegoEntity juego;
 
     // IdUsuario
     @ManyToOne
-    @JoinColumn(name = "Usuario_Id")
-    private UsuarioEntity Usuario;
+    @JoinColumn(name = "usuario_Id")
+    private UsuarioEntity usuario;
 
-    @Column(name = "Horas")
-    private Integer Horas;
+    @Column(name = "horas")
+    private Integer horas;
 
-    @Column(name = "Minutos")
-    private Integer Minutos;
+    @Column(name = "minutos")
+    private Integer minutos;
 }

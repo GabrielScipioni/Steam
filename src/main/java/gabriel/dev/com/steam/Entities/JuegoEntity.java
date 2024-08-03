@@ -17,19 +17,23 @@ public class JuegoEntity {
     private Long Id;
 
 //   Nombre
-    private String Nombre;
+    @Column(name = "nombre")
+    private String nombre;
 //   Release
-    private String Release;
+    @Column(name = "release")
+    private String release;
 //   Precio
-    private float Precio;
+    @Column(name = "precio")
+    private float precio;
 //   IdGenero
     @Enumerated(EnumType.STRING)
     @Column(name = "genero")
-    private Genero Genero;
+    private Genero genero;
 //   Developer
     @ManyToOne
-    @JoinColumn(name = "Creador_Id")
-    private CreadorEntity Creador;
+    @JoinColumn(name = "creador_Id")
+    private CreadorEntity creador;
 //   Rating
-    private Integer Rating;
+    @Column(name = "rating")
+    private Integer rating;
 }
