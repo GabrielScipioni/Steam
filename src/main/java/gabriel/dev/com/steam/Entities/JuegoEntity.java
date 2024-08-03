@@ -24,6 +24,7 @@ public class JuegoEntity {
     private float Precio;
 //   IdGenero
     @Enumerated(EnumType.STRING)
+    @Column(name = "genero")
     private Genero Genero;
 //   Developer
     @ManyToOne

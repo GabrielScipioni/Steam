@@ -32,4 +32,5 @@ public class UsuarioServiceImpl implements UsuarioService {
     public void updateNiveles(Integer niveles, Usuario usuario){
         //todo actualizar los niveles de un usuario especifico
     }
+
 }
