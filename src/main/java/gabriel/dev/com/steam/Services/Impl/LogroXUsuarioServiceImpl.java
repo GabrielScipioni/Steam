@@ -24,7 +24,7 @@ public class LogroXUsuarioServiceImpl implements LogroXUsuarioService {
     private UsuarioServiceImpl usuarioService;
     @Autowired
     private BibliotecaServiceImpl bibliotecaService;
-
+    @Override
     public void conseguirLogro(Juego juego, String logro, String nombre, String password){
         //todo  validar que el usuario tenga en su biblioteca ese juego, en caso de que si, asignarle un logro al usuario (primero logeandolo) en base al nombre del logro, en caso de que no lo tenga devolver algun error
     }

@@ -18,10 +18,11 @@ public class LogroServiceImpl implements LogroService {
     private ModelMapper modelMapper;
     @Autowired
     private JuegoServiceImpl juegoService;
-
+    @Override
     public void asignarLogros(List<String> logros, Juego juego){
         //todo asignarle logros a un juego contemplar el caso de que un juego ya tenga logros, validar que el juego exista
     }
+    @Override
     public List<Logro> ObtenerLogros(Juego juego){
         //todo devolver todos los logros que tenga un juego
         return null;

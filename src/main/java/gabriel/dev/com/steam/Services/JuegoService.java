@@ -13,6 +13,6 @@ public interface JuegoService {
 
     void crearJuego(Genero genero, float precio, String creador, String nombre, String release);
 
-    List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, float precioMax, float precioMin, String nombre);
+    List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, Float precioMax, Float precioMin, String nombre);
     void calcularRatingall();
 }

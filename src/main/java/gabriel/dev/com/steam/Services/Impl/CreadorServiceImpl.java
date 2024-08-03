@@ -22,7 +22,7 @@ public class CreadorServiceImpl implements CreadorService {
     private CreadorRepository creadorRepository;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Override
     public Creador GetCreadoresByName (String nombre){
         // traer solo a un creador por el nombre (String) si es que existe, si no devolver un null
         Optional<CreadorEntity> optionalCreador = creadorRepository.findByNombre(nombre);
@@ -31,6 +31,7 @@ public class CreadorServiceImpl implements CreadorService {
         }
         return modelMapper.map(optionalCreador.get(),Creador.class);
     }
+    @Override
     public ResponseEntity<String> crearCreador(String nombre) {
         // Verificar si el creador ya existe
         if (existeCreador(nombre)) {

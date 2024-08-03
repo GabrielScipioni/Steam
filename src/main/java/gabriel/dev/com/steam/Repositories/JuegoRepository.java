@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface JuegoRepository extends JpaRepository<JuegoEntity, Long> {
+
     @Query("SELECT j FROM JuegoEntity j WHERE j.creador.nombre = :nombreCreador")
     List<JuegoEntity> findJuegosByCreadorNombre(@Param("nombreCreador") String nombreCreador);
 

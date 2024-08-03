@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
 public interface UsuarioService {
     Usuario login(String nombre, String password);
     Usuario crearUsuario(String nombre, String password, Pais pais);
+    void updateNiveles(Integer niveles, Usuario usuario);
 }

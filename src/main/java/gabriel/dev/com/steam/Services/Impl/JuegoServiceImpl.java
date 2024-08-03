@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class JuegoServiceImpl implements JuegoService {
 
@@ -23,7 +24,7 @@ public class JuegoServiceImpl implements JuegoService {
     private CreadorServiceImpl creadorService;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Override
     public List<Juego> busacarJuegosDeAutor(String nombreCreador){
         //se debera devolver los juegos asociados a un creador pasado por parametro, usar juegoRepository.findJuegosByCreadorNombre(nombreCreador)
         List<JuegoEntity> juegosEntity =juegoRepository.findJuegosByCreadorNombre(nombreCreador);
@@ -36,7 +37,7 @@ public class JuegoServiceImpl implements JuegoService {
         }
         return juegos;
     }
-
+    @Override
     public void crearJuego(Genero genero, float precio, String creador, String nombre, String release){
         //crear un juego con los parametros pasados, validar que el creador exista, y setearle un rating de cero
         JuegoEntity juego = new JuegoEntity();
@@ -48,52 +49,35 @@ public class JuegoServiceImpl implements JuegoService {
         juego.setRating(0);
         juegoRepository.save(juego);
     }
-
-    public List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, float precioMax, float precioMin, String nombre) {
+    @Override
+    public List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, Float precioMax, Float precioMin, String nombre) {
         // Lista suprema que contendrá los juegos que coincidan con los filtros
-        List<Juego> listaJuegosSuprema = new ArrayList<>();
+        List<Juego> listaJuegosSuprema = todosLosJuegos();
+        List<Juego> listaFiltrada = new ArrayList<>(listaJuegosSuprema);
 
-        // Aplicar filtro de género si se proporciona
+        // Asignar valores por defecto si los filtros son null
+        Integer ratingMaxFinal = (ratingMax != null) ? ratingMax : Integer.MAX_VALUE;
+        Integer ratingMinFinal = (ratingMin != null) ? ratingMin : Integer.MIN_VALUE;
+        Float precioMaxFinal = (precioMax != null) ? precioMax : Float.MAX_VALUE;
+        Float precioMinFinal = (precioMin != null) ? precioMin : Float.MIN_VALUE;
+
+        // Aplicar el filtro de género si no es null
         if (genero != null) {
-            listaJuegosSuprema.addAll(buscarJuegoDeGenero(genero));
+            listaFiltrada.retainAll(buscarJuegoDeGenero(genero));
         }
 
-        // Aplicar filtro de rating si se proporcionan ambos límites
-        if (ratingMax != null && ratingMin != null) {
-            List<Juego> juegosRating = buscarJuegoDeRating(ratingMax, ratingMin);
-            if (listaJuegosSuprema.isEmpty()) {
-                listaJuegosSuprema.addAll(juegosRating);
-            } else {
-                listaJuegosSuprema.retainAll(juegosRating);
-            }
+        // Aplicar el filtro de rating usando los valores por defecto si no son nulls
+        listaFiltrada.retainAll(buscarJuegoDeRating(ratingMaxFinal, ratingMinFinal));
+
+        // Aplicar el filtro de precio usando los valores por defecto si no son nulls
+        listaFiltrada.retainAll(buscarJuegoDePrecio(precioMaxFinal, precioMinFinal));
+
+        // Aplicar el filtro de nombre si no es null ni vacío
+        if (nombre != null && !nombre.isEmpty()) {
+            listaFiltrada.retainAll(buscarJuegoDeNombre(nombre));
         }
 
-        // Aplicar filtro de precio si se proporcionan ambos límites
-        if (precioMax != 0 && precioMin != 0) {
-            List<Juego> juegosPrecio = buscarJuegoDePrecio(precioMax, precioMin);
-            if (listaJuegosSuprema.isEmpty()) {
-                listaJuegosSuprema.addAll(juegosPrecio);
-            } else {
-                listaJuegosSuprema.retainAll(juegosPrecio);
-            }
-        }
-
-        // Aplicar filtro de nombre si se proporciona
-        if (nombre != null) {
-            List<Juego> juegosNombre = buscarJuegoDeNombre(nombre);
-            if (listaJuegosSuprema.isEmpty()) {
-                listaJuegosSuprema.addAll(juegosNombre);
-            } else {
-                listaJuegosSuprema.retainAll(juegosNombre);
-            }
-        }
-
-        // Si no se proporciona ningún filtro, devolver todos los juegos
-        if (genero == null && ratingMax == null && ratingMin == null && precioMax == 0 && precioMin == 0 && nombre == null) {
-            return todosLosJuegos();
-        }
-
-        return new ArrayList<>(listaJuegosSuprema);
+        return new ArrayList<>(listaFiltrada);
     }
 
 
@@ -147,6 +131,7 @@ public class JuegoServiceImpl implements JuegoService {
      * la verdad que no se me ocurre ahora como hacer esto, sea libre de agregarle parametros
      * o no hacerlo
      */
+    @Override
     public void calcularRatingall(){
         //todo metodo encargado de actualizar el rating de los juegos en base a su cantidad de jugadores. En caso de contar con misma cantidad de jugadores mantendran el mismo puesto, los demas juegos  le seguiran con el numero siguiente
     }
