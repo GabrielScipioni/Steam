@@ -18,7 +18,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private ModelMapper modelMapper;
 
     public Usuario login(String nombre, String password){
-        //Todo usar findByNombreAndPassword() para logear, en el caso de que no exista devolver un error, en el caso de poder logearse actualizar lastLogin a la fecha actual
+        //Todo usar findByNombreAndPassword() para logear, en el caso de que no exista devolver un null, en el caso de poder logearse actualizar lastLogin a la fecha actual
         return null;
     }
     public Usuario crearUsuario(String nombre, String password, Pais pais){

@@ -23,7 +23,7 @@ public class CreadorServiceImpl implements CreadorService {
         return null;
     }
     public void CrearCreador (String nombre){
-        //todo crear a un creador de videojuegos a partir del nombre, asegurarse de que no exista usando el metodo existeCreador(String), en tal caso devolver un error de badRequest
+        //todo crear a un creador de videojuegos a partir del nombre, asegurarse de que no exista usando el metodo existeCreador(String), en tal caso devolver un error de null
     }
     private boolean existeCreador(String nombre){
         //todo este metodo debe validar si un creador existe, true en el caso de que si, false en el caso de que no
