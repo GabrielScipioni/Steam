@@ -9,5 +9,4 @@ public class SteamApplication {
     public static void main(String[] args) {
         SpringApplication.run(SteamApplication.class, args);
     }
-
 }

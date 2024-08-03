@@ -17,22 +17,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UsuarioEntity {
 
-// > Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-// > Nombre
-    private String Nombre;
-    private String Password;
-// > Pais
-    @Enumerated(EnumType.STRING)
-    private Pais Pais;
-// > LastLogin
-    private LocalDateTime LastLogin;
-// > CreatedAt
-    private LocalDateTime CreatedAt;
-// > Nivel
-    private Integer Nivel;
-    private float Coins;
+    private Long id;
 
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Pais pais;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    private Integer nivel;
+    private float coins;
 }

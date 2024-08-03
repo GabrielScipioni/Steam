@@ -34,7 +34,7 @@ public class BibliotecaServiceImpl implements BibliotecaService {
         //todo obtener al usuario y restarle el precio del juego. luego guardar el juego dentro de la biblioteca del usuario seteando los minutos, horas en cero y sumarle 5 niveles al usuario. ademas actualizar el rating de todos los juego con juegoService.calcularRatingall() y guardar todos los cambios
     }
 
-    public void jugar(String nombre, String password, String nombreJuego, Integer horas,, Integer minutos){
+    public void jugar(String nombre, String password, String nombreJuego, Integer horas, Integer minutos){
         //todo el usuario se logueara y se le sumaran las horas a su juego, los minutos en caso de pasarse de los 60 deberan transformarse en 1 hora, 2 horas si superan los 120 minutos y asi secuencialmente, los minutos sobrantes de la convercion se sumaran a los minutos
     }
     private void minutosAHoras(Integer horas, Integer minutos){

@@ -26,7 +26,4 @@ public class LogroServiceImpl implements LogroService {
         //todo devolver todos los logros que tenga un juego
         return null;
     }
-    public void calcularRatingJuego(Float porcentaje){
-        //
-    }
 }
