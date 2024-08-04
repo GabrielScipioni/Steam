@@ -17,10 +17,10 @@ public interface JuegoRepository extends JpaRepository<JuegoEntity, Long> {
 
     List<JuegoEntity> findByGenero (Genero genero);
 
-    @Query("select j from JuegoEntity j where j.rating < :ratingMax and j.rating > :ratingMin")
-    List<JuegoEntity> findByRating (@Param("ratingMax") Integer ratingMax, @Param("ratingMin") Integer ratingMin);
+    @Query("SELECT j FROM JuegoEntity j WHERE j.rating <= :ratingMax AND j.rating >= :ratingMin")
+    List<JuegoEntity> findByRating(@Param("ratingMax") Integer ratingMax, @Param("ratingMin") Integer ratingMin);
 
-    @Query("select j from JuegoEntity j where j.precio < :precioMax and j.precio > :precioMin")
+    @Query("SELECT j FROM JuegoEntity j WHERE j.precio <= :precioMax AND j.precio >= :precioMin")
     List<JuegoEntity> findByPrecio(@Param("precioMax") float precioMax, @Param("precioMin") float precioMin);
 
     @Query("SELECT j FROM JuegoEntity j WHERE LOWER(j.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")

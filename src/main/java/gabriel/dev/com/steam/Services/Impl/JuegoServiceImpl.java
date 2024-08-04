@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -24,6 +26,7 @@ public class JuegoServiceImpl implements JuegoService {
     private CreadorServiceImpl creadorService;
     @Autowired
     private ModelMapper modelMapper;
+
     @Override
     public List<Juego> busacarJuegosDeAutor(String nombreCreador){
         //se debera devolver los juegos asociados a un creador pasado por parametro, usar juegoRepository.findJuegosByCreadorNombre(nombreCreador)
@@ -52,6 +55,8 @@ public class JuegoServiceImpl implements JuegoService {
     @Override
     public List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, Float precioMax, Float precioMin, String nombre) {
         // Lista suprema que contendrá los juegos que coincidan con los filtros
+
+
         List<Juego> listaJuegosSuprema = todosLosJuegos();
         List<Juego> listaFiltrada = new ArrayList<>(listaJuegosSuprema);
 
@@ -60,6 +65,8 @@ public class JuegoServiceImpl implements JuegoService {
         Integer ratingMinFinal = (ratingMin != null) ? ratingMin : Integer.MIN_VALUE;
         Float precioMaxFinal = (precioMax != null) ? precioMax : Float.MAX_VALUE;
         Float precioMinFinal = (precioMin != null) ? precioMin : Float.MIN_VALUE;
+
+
 
         // Aplicar el filtro de género si no es null
         if (genero != null) {
@@ -117,7 +124,7 @@ public class JuegoServiceImpl implements JuegoService {
         }
         return juegos;
     }
-    private List<Juego> todosLosJuegos(){
+    public List<Juego> todosLosJuegos(){
         //todo trae todos los juegos y lo devuleve como lista
         List<JuegoEntity> juegosEntity = juegoRepository.findAll();
         List<Juego> juegos = new ArrayList<>();
@@ -127,12 +134,25 @@ public class JuegoServiceImpl implements JuegoService {
         return juegos;
     }
 
-    /**
-     * la verdad que no se me ocurre ahora como hacer esto, sea libre de agregarle parametros
-     * o no hacerlo
-     */
     @Override
-    public void calcularRatingall(){
-        //todo metodo encargado de actualizar el rating de los juegos en base a su cantidad de jugadores. En caso de contar con misma cantidad de jugadores mantendran el mismo puesto, los demas juegos  le seguiran con el numero siguiente
+    public void calcularRatingall(List<Object[]> jugadoresPorJuego) {
+        // Ordenar los juegos por cantidad de jugadores en orden descendente
+        jugadoresPorJuego.sort((a, b) -> ((Long) b[1]).compareTo((Long) a[1]));
+
+        // Asignar el rating a cada juego basado en la cantidad de jugadores
+        int rating = 0;
+        for (Object[] result : jugadoresPorJuego) {
+            Long juegoId = (Long) result[0];
+            JuegoEntity juegoEntity = juegoRepository.findById(juegoId).orElse(null);
+            if (juegoEntity != null) {
+                juegoEntity.setRating(rating++);
+                juegoRepository.save(juegoEntity);
+            }
+        }
+    }
+
+    @Override
+    public void actualizarRating(List<Object[]> jugadoresPorJuego) {
+        calcularRatingall(jugadoresPorJuego);
     }
 }

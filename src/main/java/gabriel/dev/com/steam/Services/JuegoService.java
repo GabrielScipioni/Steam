@@ -14,5 +14,7 @@ public interface JuegoService {
     void crearJuego(Genero genero, float precio, String creador, String nombre, String release);
 
     List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, Float precioMax, Float precioMin, String nombre);
-    void calcularRatingall();
+
+    void calcularRatingall(List<Object[]> jugadoresPorJuego);
+    void actualizarRating(List<Object[]> jugadoresPorJuego);
 }

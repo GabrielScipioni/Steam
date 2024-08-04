@@ -1,6 +1,7 @@
 package gabriel.dev.com.steam.Services.Impl;
 
 
+import gabriel.dev.com.steam.Entities.UsuarioEntity;
 import gabriel.dev.com.steam.Models.Enums.Pais;
 import gabriel.dev.com.steam.Models.Usuario;
 import gabriel.dev.com.steam.Repositories.UsuarioRepository;
@@ -8,6 +9,8 @@ import gabriel.dev.com.steam.Services.UsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -33,6 +36,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void updateNiveles(Integer niveles, Usuario usuario){
         //todo actualizar los niveles de un usuario especifico
+    }
+    public int CantidadDeUsuarios(){
+        List<UsuarioEntity> usuarioEntityList = usuarioRepository.findAll();
+        return usuarioEntityList.size();
     }
 
 }

@@ -6,24 +6,21 @@ import gabriel.dev.com.steam.Models.Enums.Genero;
 import gabriel.dev.com.steam.Models.Juego;
 import gabriel.dev.com.steam.Repositories.JuegoRepository;
 import gabriel.dev.com.steam.Entities.JuegoEntity;  // Ensure you have this import
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static javax.management.Query.eq;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -75,7 +72,7 @@ class JuegoServiceImplTest {
     }
 
     @Test
-    void buscarJuegosDeAutor() {
+    void buscarJuegosDeAutorTest() {
         when(juegoRepository.findJuegosByCreadorNombre("creadorTest")).thenReturn(juegoEntities);
         when(modelMapper.map(juegoEntityTest, Juego.class)).thenReturn(juegoTest);
 
@@ -83,6 +80,20 @@ class JuegoServiceImplTest {
         assertEquals(1, result.size());
         assertEquals("juegoTest", result.get(0).getNombre());
     }
+    @Test
+    void buscarJuegosDeAutorTestCaseNull() {
+        // Configura el comportamiento del mock para devolver una lista vacía
+        when(juegoRepository.findJuegosByCreadorNombre("creadorTest")).thenReturn(new ArrayList<>());
+        // Configura el comportamiento del mock del ModelMapper, aunque no se usará en este caso
+        when(modelMapper.map(juegoEntityTest, Juego.class)).thenReturn(juegoTest);
+
+        // Llama al método bajo prueba
+        List<Juego> result = juegoService.busacarJuegosDeAutor("creadorTest");
+
+        // Verifica que el resultado sea null
+        assertNull(result);
+    }
+
 
     @Test
     void crearJuego() {
@@ -107,18 +118,123 @@ class JuegoServiceImplTest {
     }
 
     @Test
-    void buscarJuegosPorFiltros() {
-        Genero genero = Genero.ACCION;
-        Integer ratingMax = null;
-        Integer ratingMin = null;
-        Float precioMax = null;
-        Float precioMin = null;
-        String nombre = null;
-        when(juegoRepository.findByGenero(genero)).thenReturn(juegoEntities);
-        when(modelMapper.map(any(), Juego.class)).thenReturn(juegoTest);
+    void todosLosJuegosTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    when(juegoRepository.findAll()).thenReturn(juegoEntities);
+    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
 
+        Method metodo = JuegoServiceImpl.class.getDeclaredMethod("todosLosJuegos");
+        metodo.setAccessible(true);
+        List<Juego> resultado = (List<Juego>) metodo.invoke(juegoService);
+        Juego j = resultado.get(0);
+        assertEquals(resultado.size(),1);
+        assertEquals(j.getNombre(),juegoTest.getNombre());
+    }
+
+    @Test
+    void buscarJuegoDeNombreTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    when(juegoRepository.findByNombre(anyString())).thenReturn(juegoEntities);
+    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+
+        Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDeNombre",String.class);
+        metodo.setAccessible(true);
+        List<Juego> resultado = (List<Juego>) metodo.invoke(juegoService,"asdasd");
+        Juego j = resultado.get(0);
+        assertEquals(resultado.size(),1);
+        assertEquals(j.getNombre(),juegoTest.getNombre());
+    }
+
+    @Test
+    void buscarJuegoDePrecioTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    when(juegoRepository.findByPrecio(anyFloat(),anyFloat())).thenReturn(juegoEntities);
+    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+
+        Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDePrecio",float.class,float.class);
+        metodo.setAccessible(true);
+        List<Juego> resultado = (List<Juego>) metodo.invoke(juegoService,1F,1F);
+        Juego j = resultado.get(0);
+        assertEquals(resultado.size(),1);
+        assertEquals(j.getNombre(),juegoTest.getNombre());
+    }
+
+    @Test
+    void buscarJuegoDeRatingTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    when(juegoRepository.findByRating(anyInt(), anyInt())).thenReturn(juegoEntities);
+    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+
+        Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDeRating",Integer.class,Integer.class);
+        metodo.setAccessible(true);
+        List<Juego> resultado = (List<Juego>) metodo.invoke(juegoService,Integer.valueOf(1),Integer.valueOf(1));
+        Juego j = resultado.get(0);
+        assertEquals(resultado.size(),1);
+        assertEquals(j.getNombre(),juegoTest.getNombre());
     }
     @Test
-    void calcularRatingall() {
+    void buscarJuegoDeGeneroTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        when(juegoRepository.findByGenero(any(Genero.class))).thenReturn(juegoEntities);
+        when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+
+        Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDeGenero",Genero.class);
+        metodo.setAccessible(true);
+        List<Juego> resultado = (List<Juego>) metodo.invoke(juegoService,Genero.ACCION);
+        Juego j = resultado.get(0);
+        assertEquals(resultado.size(),1);
+        assertEquals(j.getNombre(),juegoTest.getNombre());
     }
+
+
+
+    void configurarMocks() {
+        when(juegoRepository.findAll()).thenReturn(juegoEntities);
+        when(juegoRepository.findByGenero(any(Genero.class))).thenReturn(juegoEntities);
+        when(juegoRepository.findByRating(anyInt(), anyInt())).thenReturn(juegoEntities);
+        when(juegoRepository.findByPrecio(anyFloat(), anyFloat())).thenReturn(juegoEntities);
+        when(juegoRepository.findByNombre(anyString())).thenReturn(juegoEntities);
+        when(modelMapper.map(any(JuegoEntity.class), eq(Juego.class))).thenReturn(juegoTest);
+    }
+
+    @Test
+    void buscarJuegosPorFiltrosSinFiltrosTest() {
+        configurarMocks();
+        List<Juego> resultado = juegoService.BuscarJuegosPorFiltros(null, null, null, null, null, null);
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.size());
+        assertEquals(juegoTest.getNombre(), resultado.get(0).getNombre());
+    }
+
+    @Test
+    void buscarJuegosPorFiltrosConGeneroTest() {
+        configurarMocks();
+        List<Juego> resultado = juegoService.BuscarJuegosPorFiltros(Genero.ACCION, null, null, null, null, null);
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.size());
+        assertEquals(juegoTest.getNombre(), resultado.get(0).getNombre());
+    }
+
+    @Test
+    void buscarJuegosPorFiltrosConRatingTest() {
+        configurarMocks();
+        List<Juego> resultado = juegoService.BuscarJuegosPorFiltros(null, 5, 1, null, null, null);
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.size());
+        assertEquals(juegoTest.getNombre(), resultado.get(0).getNombre());
+    }
+
+    @Test
+    void buscarJuegosPorFiltrosConPrecioTest() {
+        configurarMocks();
+        List<Juego> resultado = juegoService.BuscarJuegosPorFiltros(null, null, null, 2.0F, 1.0F, null);
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.size());
+        assertEquals(juegoTest.getNombre(), resultado.get(0).getNombre());
+    }
+
+    @Test
+    void buscarJuegosPorFiltrosConNombreTest() {
+        configurarMocks();
+        List<Juego> resultado = juegoService.BuscarJuegosPorFiltros(null, null, null, null, null, "juegoTest");
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.size());
+        assertEquals(juegoTest.getNombre(), resultado.get(0).getNombre());
+    }
+
 }

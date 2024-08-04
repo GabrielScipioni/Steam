@@ -12,4 +12,6 @@ public interface BibliotecaService  {
     boolean usuarioTieneJuego(String nombre, String password, Juego juego);
     void comprarJuego(String nombre, String password, Juego juego);
     void jugar(String nombre, String password, String nombreJuego, Integer horas, Integer minutos);
+    List<Object[]> countPlayersByJuego();
+    void actualizarRating();
 }

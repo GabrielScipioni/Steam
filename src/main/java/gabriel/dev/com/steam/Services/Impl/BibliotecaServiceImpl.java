@@ -41,4 +41,16 @@ public class BibliotecaServiceImpl implements BibliotecaService {
     private void minutosAHoras(Integer horas, Integer minutos){
         //todo seteara las horas que pueden ocupar los minutos pasados por parametro, y seteara los minutos sobrantes
     }
+
+    @Override
+    public List<Object[]> countPlayersByJuego() {
+        return bibliotecaRepository.countPlayersByJuego();
+    }
+
+    @Override
+    public void actualizarRating() {
+        // Obtener el juegoService a través de @Autowired o inyección de dependencias
+        juegoService.actualizarRating(countPlayersByJuego());
+    }
+
 }
