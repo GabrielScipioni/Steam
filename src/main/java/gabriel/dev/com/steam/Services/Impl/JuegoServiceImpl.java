@@ -3,6 +3,7 @@ package gabriel.dev.com.steam.Services.Impl;
 
 import gabriel.dev.com.steam.Entities.CreadorEntity;
 import gabriel.dev.com.steam.Entities.JuegoEntity;
+import gabriel.dev.com.steam.Models.Creador;
 import gabriel.dev.com.steam.Models.Enums.Genero;
 import gabriel.dev.com.steam.Models.Juego;
 import gabriel.dev.com.steam.Repositories.JuegoRepository;
@@ -41,16 +42,18 @@ public class JuegoServiceImpl implements JuegoService {
         return juegos;
     }
     @Override
-    public void crearJuego(Genero genero, float precio, String creador, String nombre, String release){
+    public Juego crearJuego(Genero genero, float precio, String creador, String nombre, String release){
         //crear un juego con los parametros pasados, validar que el creador exista, y setearle un rating de cero
         JuegoEntity juego = new JuegoEntity();
         juego.setGenero(genero);
         juego.setPrecio(precio);
-        juego.setCreador(modelMapper.map(creador, CreadorEntity.class));
+        Creador c = creadorService.GetCreadoresByName(creador);
+        CreadorEntity cE =modelMapper.map(c, CreadorEntity.class);
+        juego.setCreador(cE);
         juego.setNombre(nombre);
         juego.setRelease(release);
         juego.setRating(0);
-        juegoRepository.save(juego);
+        return modelMapper.map(juegoRepository.save(juego),Juego.class);
     }
     @Override
     public List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, Float precioMax, Float precioMin, String nombre) {

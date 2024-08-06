@@ -77,5 +77,6 @@ public class SteamControllerTest {
                 .andExpect(jsonPath("$[0].precio").value(29.99f)) // Verifica que el precio coincida
                 .andExpect(jsonPath("$[0].genero").value(Genero.FPS.toString())) // Verifica que el género coincida
                 .andExpect(jsonPath("$[0].rating").value(5)); // Verifica que el rating coincida
+        System.out.println();
     }
 }

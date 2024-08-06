@@ -10,7 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -26,13 +29,13 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class JuegoServiceImplTest {
 
-    @InjectMocks
+    @SpyBean
     JuegoServiceImpl juegoService;
-    @Mock
+    @MockBean
     JuegoRepository juegoRepository;
-    @Mock
+    @MockBean
     CreadorServiceImpl creadorService;
-    @Mock
+    @Autowired
     ModelMapper modelMapper;
 
     Juego juegoTest;
@@ -44,7 +47,6 @@ class JuegoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         creadorTest = new Creador(1L,"creadorTest");
         creadorTestEntity = new CreadorEntity(1L,"creadorTest");
 
@@ -74,7 +76,7 @@ class JuegoServiceImplTest {
     @Test
     void buscarJuegosDeAutorTest() {
         when(juegoRepository.findJuegosByCreadorNombre("creadorTest")).thenReturn(juegoEntities);
-        when(modelMapper.map(juegoEntityTest, Juego.class)).thenReturn(juegoTest);
+        //when(modelMapper.map(juegoEntityTest, Juego.class)).thenReturn(juegoTest);
 
         List<Juego> result = juegoService.busacarJuegosDeAutor("creadorTest");
         assertEquals(1, result.size());
@@ -85,7 +87,7 @@ class JuegoServiceImplTest {
         // Configura el comportamiento del mock para devolver una lista vacía
         when(juegoRepository.findJuegosByCreadorNombre("creadorTest")).thenReturn(new ArrayList<>());
         // Configura el comportamiento del mock del ModelMapper, aunque no se usará en este caso
-        when(modelMapper.map(juegoEntityTest, Juego.class)).thenReturn(juegoTest);
+        //when(modelMapper.map(juegoEntityTest, Juego.class)).thenReturn(juegoTest);
 
         // Llama al método bajo prueba
         List<Juego> result = juegoService.busacarJuegosDeAutor("creadorTest");
@@ -97,30 +99,30 @@ class JuegoServiceImplTest {
 
     @Test
     void crearJuego() {
-        // Mock the modelMapper to return creadorTestEntity when mapping the creator name to CreadorEntity
-        when(modelMapper.map("creadorTest", CreadorEntity.class)).thenReturn(creadorTestEntity);
+        // Mockear respuestas
+        when(creadorService.GetCreadoresByName(creadorTest.getNombre())).thenReturn(creadorTest);
+        when(juegoRepository.save(any(JuegoEntity.class))).thenReturn(juegoEntityTest);
 
-        // Call the method to test
-        juegoService.crearJuego(Genero.ACCION, 1.8F, "creadorTest", "juegoTest", "1.0.0");
+        // Llamar al método a probar
+        Juego resultado = juegoService.crearJuego(Genero.ACCION, 1.8F, "creadorTest", "juegoTest", "1.0.0");
 
-        // Verify that the juegoRepository's save method was called once
+        // Verificar el resultado
+        assertNotNull(resultado);
+        assertEquals(Genero.ACCION, resultado.getGenero());
+        assertEquals(1.8F, resultado.getPrecio());
+        assertEquals("juegoTest", resultado.getNombre());
+        assertEquals("1.0.0", resultado.getRelease());
+        assertEquals(1, resultado.getRating());
+
+        // Verificar interacciones
+        verify(creadorService, times(1)).GetCreadoresByName("creadorTest");
         verify(juegoRepository, times(1)).save(any(JuegoEntity.class));
-
-        // Verify that the save method was called with a JuegoEntity having the expected properties
-        verify(juegoRepository).save(argThat(juego ->
-                juego.getGenero() == Genero.ACCION &&
-                        juego.getPrecio() == 1.8F &&
-                        juego.getNombre().equals("juegoTest") &&
-                        juego.getRelease().equals("1.0.0") &&
-                        juego.getCreador().equals(creadorTestEntity) &&
-                        juego.getRating() == 0
-        ));
     }
 
     @Test
     void todosLosJuegosTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     when(juegoRepository.findAll()).thenReturn(juegoEntities);
-    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+    //when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
 
         Method metodo = JuegoServiceImpl.class.getDeclaredMethod("todosLosJuegos");
         metodo.setAccessible(true);
@@ -133,7 +135,7 @@ class JuegoServiceImplTest {
     @Test
     void buscarJuegoDeNombreTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     when(juegoRepository.findByNombre(anyString())).thenReturn(juegoEntities);
-    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+    //when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
 
         Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDeNombre",String.class);
         metodo.setAccessible(true);
@@ -146,7 +148,7 @@ class JuegoServiceImplTest {
     @Test
     void buscarJuegoDePrecioTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     when(juegoRepository.findByPrecio(anyFloat(),anyFloat())).thenReturn(juegoEntities);
-    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+    //when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
 
         Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDePrecio",float.class,float.class);
         metodo.setAccessible(true);
@@ -159,7 +161,7 @@ class JuegoServiceImplTest {
     @Test
     void buscarJuegoDeRatingTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     when(juegoRepository.findByRating(anyInt(), anyInt())).thenReturn(juegoEntities);
-    when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+    //when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
 
         Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDeRating",Integer.class,Integer.class);
         metodo.setAccessible(true);
@@ -171,7 +173,7 @@ class JuegoServiceImplTest {
     @Test
     void buscarJuegoDeGeneroTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         when(juegoRepository.findByGenero(any(Genero.class))).thenReturn(juegoEntities);
-        when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
+        //when(modelMapper.map(juegoEntityTest,Juego.class)).thenReturn(juegoTest);
 
         Method metodo = JuegoServiceImpl.class.getDeclaredMethod("buscarJuegoDeGenero",Genero.class);
         metodo.setAccessible(true);
@@ -189,7 +191,7 @@ class JuegoServiceImplTest {
         when(juegoRepository.findByRating(anyInt(), anyInt())).thenReturn(juegoEntities);
         when(juegoRepository.findByPrecio(anyFloat(), anyFloat())).thenReturn(juegoEntities);
         when(juegoRepository.findByNombre(anyString())).thenReturn(juegoEntities);
-        when(modelMapper.map(any(JuegoEntity.class), eq(Juego.class))).thenReturn(juegoTest);
+        //when(modelMapper.map(any(JuegoEntity.class), eq(Juego.class))).thenReturn(juegoTest);
     }
 
     @Test

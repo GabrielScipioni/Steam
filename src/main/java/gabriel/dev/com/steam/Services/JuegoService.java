@@ -11,7 +11,7 @@ import java.util.List;
 public interface JuegoService {
     List<Juego> busacarJuegosDeAutor(String nombreCreador);
 
-    void crearJuego(Genero genero, float precio, String creador, String nombre, String release);
+    Juego crearJuego(Genero genero, float precio, String creador, String nombre, String release);
 
     List<Juego> BuscarJuegosPorFiltros(Genero genero, Integer ratingMax, Integer ratingMin, Float precioMax, Float precioMin, String nombre);
 
